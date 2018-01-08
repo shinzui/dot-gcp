@@ -2,18 +2,20 @@
 #
 # shinzui/gcp ellipsis package
 
-# The following hooks can be defined to customize behavior of your package:
-# pkg.install() {
-#     fs.link_files $PKG_PATH
-# }
+pkg.install() {
+  brew cask install google-cloud-sdk
+  gcloud components install beta alpha gsutil pubsub-emulator
+}
 
 # pkg.push() {
 #     git.push
 # }
 
-# pkg.pull() {
-#     git.pull
-# }
+pkg.pull() {
+    git.pull
+
+    gcloud components update
+}
 
 # pkg.installed() {
 #     git.status
@@ -22,3 +24,12 @@
 # pkg.status() {
 #     git.diffstat
 # }
+
+install_app() {
+  if test ! $(brew cask list |grep "$app"); then
+    echo "installing $app"
+    brew cask install --appdir="/Applications" $app
+  else
+    echo "$app is already installed. Skipping..."
+  fi
+}
